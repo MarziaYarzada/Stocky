@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors';
-import authRoutes from './routes/auth/auth.routes';
+import authRoutes from './routes/auth.routes';
+import categoryRoutes from './routes/category.routes';
+import productRoutes from './routes/product.routes';
 
  const app=express();
  app.use(cors());
@@ -9,5 +11,7 @@ import authRoutes from './routes/auth/auth.routes';
     res.send(' Warehouse Inventory API is running...')
  })
  app.use('/api/auth', authRoutes);
+ app.use('/api/category', categoryRoutes);
+app.use('/api/product', productRoutes);
 
  export default app;
