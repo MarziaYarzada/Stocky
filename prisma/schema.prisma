@@ -23,14 +23,17 @@ model User {
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  products Product[]
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
 }
 
 model Product {
-  id         String         @id @default(uuid())
-  name       String
+  id    String @id @default(uuid())
+  name  String
+  price Float
+
   sku        String         @unique
   quantity   Int            @default(0)
   categoryId String
