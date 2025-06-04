@@ -1,17 +1,25 @@
-import { Request, Response } from 'express';
-import * as service from '../services/product.service';
-
-
+import { Request, Response } from "express";
+import * as service from "../services/product.service";
 
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const { name, quantity = 0, price, categoryId, sku } = req.body;
 
     if (!name || price === undefined || !categoryId) {
-      return res.status(400).json({ message: "Missing required fields: name, price, or categoryId" });
+      return res
+        .status(400)
+        .json({
+          message: "Missing required fields: name, price, or categoryId",
+        });
     }
 
-    const product = await service.createProduct(name, quantity, price, categoryId, sku);
+    const product = await service.createProduct(
+      name,
+      quantity,
+      price,
+      categoryId,
+      sku
+    );
     return res.status(201).json(product);
   } catch (error) {
     console.error("Error adding product:", error);
@@ -20,7 +28,14 @@ export const addProduct = async (req: Request, res: Response) => {
 };
 
 export const getProducts = async (req: Request, res: Response) => {
-  const products = await service.getAllProduct();
+  const { name, minPrice, maxPrice, categoryId } = req.query;
+  const filters = {
+    name: name as string,
+    minPrice: minPrice ? Number(minPrice) : undefined,
+    maxPrice: maxPrice ? Number(maxPrice) : undefined,
+    categoryId: categoryId as string,
+  };
+  const products = await service.getAllProducts(filters);
   res.json(products);
 };
 
