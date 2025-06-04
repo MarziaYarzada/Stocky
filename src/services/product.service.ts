@@ -1,6 +1,12 @@
 import prisma from "../prisma/client";
 import { generateSKU } from '../utils/sku';
 
+interface ProductFilters{
+  name?:string;
+  minPrice?:number;
+  maxPrice?:number
+  categoryId?:string
+}
 export const createProduct = async (
   name: string,
   quantity: number,
@@ -50,8 +56,20 @@ export const createProduct = async (
   });
 };
 
-export const getAllProduct = () => {
-  return prisma.product.findMany({ include: { category: true } });
+export const getAllProducts = (fiters:ProductFilters={}) => {
+  const {name,minPrice,maxPrice,categoryId}=fiters;
+
+  return prisma.product.findMany({
+    where:{
+      name: name ? {contains:name,mode:'insensitive'} : undefined,
+      price: {
+        gte:minPrice,
+        lte:maxPrice
+      },
+      categoryId:categoryId || undefined
+    },
+    include:{category:true}
+  });
 };
 export const updateProduct = (
   id: string,
